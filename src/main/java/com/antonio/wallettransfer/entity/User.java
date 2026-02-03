@@ -30,7 +30,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 14)
+    @Column(name = "cpf_cnpj", nullable = false, unique = true, length = 14)
     private String cpfCnpj;
 
     @Enumerated(EnumType.STRING)

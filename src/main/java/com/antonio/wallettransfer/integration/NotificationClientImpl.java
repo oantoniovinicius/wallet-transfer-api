@@ -2,8 +2,10 @@ package com.antonio.wallettransfer.integration;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+@Component
 public class NotificationClientImpl implements NotificationClient {
     private static final String NOTIFY_URL = "https://util.devi.tools/api/v1/notify";
 
