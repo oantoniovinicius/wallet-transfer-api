@@ -53,7 +53,14 @@ public class TransferService {
             throw new InsufficientBalanceException();
         }
 
-        if (!authorizerClient.authorize()) {
+        boolean authorized;
+        try {
+            authorized = authorizerClient.authorize();
+        } catch (Exception ex) {
+            throw new UnauthorizedTransferException("Authorization service unavailable");
+        }
+
+        if (!authorized) {
             throw new UnauthorizedTransferException("Transfer not authorized");
         }
 
