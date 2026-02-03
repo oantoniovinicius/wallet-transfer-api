@@ -15,6 +15,8 @@ import com.antonio.wallettransfer.repository.WalletRepository;
 import com.antonio.wallettransfer.exception.InsufficientBalanceException;
 import com.antonio.wallettransfer.exception.UnauthorizedTransferException;
 import com.antonio.wallettransfer.exception.UserNotFoundException;
+import com.antonio.wallettransfer.integration.AuthorizerClient;
+import com.antonio.wallettransfer.integration.NotificationClient;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,9 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class TransferService {
+    private final AuthorizerClient authorizerClient;
+    private final NotificationClient notificationClient;
+
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
@@ -48,6 +53,10 @@ public class TransferService {
             throw new InsufficientBalanceException();
         }
 
+        if (!authorizerClient.authorize()) {
+            throw new UnauthorizedTransferException("Transfer not authorized");
+        }
+
         payerWallet.debit(amount);
         payeeWallet.credit(amount);
 
@@ -56,6 +65,11 @@ public class TransferService {
 
         Transaction transaction = Transaction.success(payer, payee, amount);
         transactionRepository.save(transaction);
+
+        try {
+            notificationClient.notifyUser(payee.getId());
+        } catch (Exception ex) {
+        }
 
     }
 }
