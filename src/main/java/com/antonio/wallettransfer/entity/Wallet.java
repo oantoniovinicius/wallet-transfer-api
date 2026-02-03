@@ -45,6 +45,13 @@ public class Wallet {
         }
     }
 
+    public static Wallet create(User user, BigDecimal initialBalance) {
+        Wallet wallet = new Wallet();
+        wallet.user = user;
+        wallet.balance = initialBalance;
+        return wallet;
+    }
+
     // domain methods
     public void credit(BigDecimal amount) {
         this.balance = this.balance.add(amount);

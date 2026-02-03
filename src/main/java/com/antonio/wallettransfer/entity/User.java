@@ -48,4 +48,13 @@ public class User {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    public static User create(String fullName, String email, String cpfCnpj, UserType type) {
+        User user = new User();
+        user.fullName = fullName;
+        user.email = email;
+        user.cpfCnpj = cpfCnpj;
+        user.userType = type;
+        return user;
+    }
 }
